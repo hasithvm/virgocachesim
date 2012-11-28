@@ -1,0 +1,46 @@
+p86 Assembler, Version 5.4 October 30, 2000
+1                      ; Lab 5b
+2                      ; Single-step through the code in your mind. Keep track of each MEMORY read/write made by the processor (ignore I/O)
+3                      
+4                      ; Constant definitions
+5                      Display	EQU 04E9h	; address of Virgo display
+6                      
+7                      ORG 0010h
+8                      ; Data segment
+9   0010  486924       STR: DB 'Hi$'
+10  0013  0000         COUNT: DW	00
+11                     
+12                     ORG 0020h
+13                     ; Code segment
+14                     
+15                     ;;;;;;;;;;;;;;;;;
+16                     ; countStr: Subroutine to count length of a '$'-terminated string
+17                     ; Input parameters:
+18                     ; 	SI: Address of start of string to be printed
+19                     ; Output parameters:
+20                     ;	BX: Count of characters in string, not including '$'.
+21  0020               countStr:
+22                     	; Save registers modified by this subroutine
+23  0020  50           	PUSH AX
+24                     
+25  0021  C7C30000     	MOV BX, 0			; Reset counter
+26  0025               LoopCS:
+27  0025  8A00         	MOV AL, [SI+BX]		; Load the next char 
+28  0027  FFC3         	INC BX
+29  0029  80F824       	CMP AL, '$'			; Compare the char to '$'
+30  002C  75F7         	JNE LoopCS			; If it is equal, then quit subroutine and return to calling code
+31  002E  FFCB         	DEC BX				; Point to the next char to be counted
+32  0030               quitCS:
+33                     	; Restore registers
+34  0030  58           	POP AX
+35  0031  C3           	RET
+36                     
+37  0032               main:
+38  0032  C7C40000     	MOV SP, 0000h		; Initialize the SP
+39  0036  C7C61000     	MOV SI, STR			; Load the starting address of the string to be printed
+40  003A  E8E3FF       	CALL countStr		; Call printStr to print the string
+41  003D  891E1300     	MOV [COUNT],BX		; Save length of STR to variable COUNT
+42  0041  F4           	HLT					; Quit
+43                     	
+44                     end main
+ Errors:  0

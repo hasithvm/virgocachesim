@@ -1,0 +1,87 @@
+0033
+0034
+0035
+0036
+0037
+0038
+0039
+003A
+003B
+003C
+003D
+0020
+0021
+0022
+0023
+0024
+0025
+0026
+0010
+0027
+0028
+0029
+002A
+002B
+002C
+002D
+002E
+002F
+0030
+0025
+0026
+0011
+0027
+0028
+0029
+002A
+002B
+002C
+002D
+002E
+002F
+0030
+0025
+0026
+0012
+0027
+0028
+0029
+002A
+002B
+0031
+FFFC
+FFFD
+0032
+FFFE
+FFFF
+003E
+003F
+0040
+0041
+0042
+import cachemodel
+
+def main(args):
+	lines = []
+	while (True):
+	try:
+		readln = raw_input()
+		lines.append(readln)
+		
+	except EOFError:
+		break
+	print "memory accesses:", len(lines)
+	blockmap = BlockMap((0x0010,0x0013):'B4', (0x0014,0x0017):'B5', (0x0020,0x0023):'B6', (0x0024,0x0027):'B9', (0x0028,0x002B): 'B10', (0x002C,0x002F): 'B11', (0x0030,0x0033): 'B12', (0x34,0x37):'B13', (0x38,0x3B): 'B14', (0x3C,0x3F): 'B15', (0x40,0x43): 'B16', (0xFFFC, 0xFFFF): 'B(16K-1)')
+	simmodel = AssociativeCacheModel(4,blockmap)
+	for line in lines:
+		print simmodel.request(line.strip())
+
+
+
+
+
+
+
+if __name__=="__main__":
+	sys.exit(main(sys.argv))
+
